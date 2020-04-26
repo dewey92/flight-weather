@@ -14,5 +14,6 @@ test('displays flight information', () => {
   const { queryByText } = render(<FlightResult result={flight} />);
 
   expect(queryByText('Jakarta - Amsterdam')).toBeInTheDocument();
+  expect(queryByText('€733')).toBeInTheDocument();
   expect(queryByText('Broken clouds')).toBeInTheDocument();
 });
