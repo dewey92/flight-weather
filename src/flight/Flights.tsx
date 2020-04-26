@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, createStyles, CircularProgress, Typography } from '@material-ui/core';
+import { makeStyles, createStyles, CircularProgress, Grid, Typography } from '@material-ui/core';
 import { useRemoteData } from '../shared';
 import SearchFlightForm from './form/SearchFlightForm';
 import FlightResult from './FlightResult';
@@ -8,59 +8,53 @@ import { searchCheapestFlight } from './flightApis';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    title: {
+      marginBottom: theme.spacing(4),
+    },
     result: {
       display: 'flex',
-      flexDirection: 'column',
       margin: 'auto',
       marginTop: theme.spacing(4),
-      maxWidth: 600,
     },
     loading: {
       margin: 'auto',
     },
-    historyWrapper: {
-      marginTop: theme.spacing(4),
-    },
-    historyItem: {
-      marginBottom: theme.spacing(2),
+    resultItem: {
+      maxWidth: 600,
     },
   })
 );
 
 function Flights() {
-  const { status, loading, success } = useRemoteData<AvailableFlight | null>();
-  const [history, setHistory] = React.useState<AvailableFlight[]>([]);
+  const { status, loading, success } = useRemoteData<Array<AvailableFlight | null>>();
   const classes = useStyles();
 
-  const handleSubmit = async (payload: { fromCity: City; toCity: City; departure: Date }) => {
+  const handleSubmit = async (payload: { fromCity: City; toCities: City[]; departure: Date }) => {
     loading();
     const result = await searchCheapestFlight(payload);
     success(result);
-
-    if (result !== null) {
-      setHistory((old) => [result, ...old]);
-    }
   };
 
   return (
     <div>
+      <Typography variant="h4" align="center" className={classes.title}>
+        Compare Flight Fares by Cities
+      </Typography>
+
       <SearchFlightForm status={status} onSubmit={handleSubmit} />
 
       <main className={classes.result}>
         {status.type === 'Loading' && (
           <CircularProgress className={classes.loading} title="Loading" disableShrink />
         )}
-        {status.type === 'Success' && <FlightResult result={status.value} />}
-
-        {history.length > 0 && (
-          <div className={classes.historyWrapper}>
-            <Typography variant="h6">Search history:</Typography>
-            {history.map((item, i) => (
-              <div className={classes.historyItem} key={i}>
-                <FlightResult result={item} />
-              </div>
+        {status.type === 'Success' && (
+          <Grid container spacing={2} justify="center">
+            {status.value.map((flight, i) => (
+              <Grid item xs={12} sm key={i} className={classes.resultItem}>
+                <FlightResult result={flight} />
+              </Grid>
             ))}
-          </div>
+          </Grid>
         )}
       </main>
     </div>

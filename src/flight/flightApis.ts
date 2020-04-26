@@ -16,18 +16,22 @@ export async function getLocationsByTerm(term: string) {
 
 export async function searchCheapestFlight({
   fromCity,
-  toCity,
+  toCities,
   departure,
 }: {
   fromCity: City;
-  toCity: City;
+  toCities: City[];
   departure: Date;
 }) {
   interface FlightsResponse {
     data: Array<{ conversion: { EUR: number } }>;
   }
 
-  function resToFlight(res: FlightsResponse, weatherForecast: Weather[]): AvailableFlight | null {
+  function resToFlight(
+    res: FlightsResponse,
+    toCity: City,
+    weatherForecast: Weather[]
+  ): AvailableFlight | null {
     if (!res.data.length) return null;
     return {
       fromCity,
@@ -38,14 +42,18 @@ export async function searchCheapestFlight({
     };
   }
 
-  try {
-    const dateFrom = format(departure, 'dd/MM/yyyy');
-    const url = `https://api.skypicker.com/flights?fly_from=${fromCity.id}&fly_to=${toCity.id}&date_from=${dateFrom}&date_to=${dateFrom}&curr=EUR&partner=picky&limit=1`;
-    const { data } = await axios.get<FlightsResponse>(url);
-    const weatherForecast = await getWeatherForecast(toCity);
+  const dateFrom = format(departure, 'dd/MM/yyyy');
 
-    return resToFlight(data, weatherForecast);
-  } catch (e) {
-    return null;
-  }
+  const requests = toCities.map(async (toCity) => {
+    try {
+      const url = `https://api.skypicker.com/flights?fly_from=${fromCity.id}&fly_to=${toCity.id}&date_from=${dateFrom}&date_to=${dateFrom}&curr=EUR&partner=picky&limit=1`;
+      const { data } = await axios.get<FlightsResponse>(url);
+      const weatherForecast = await getWeatherForecast(toCity);
+
+      return resToFlight(data, toCity, weatherForecast);
+    } catch (e) {
+      return null;
+    }
+  });
+  return Promise.all(requests);
 }

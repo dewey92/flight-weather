@@ -8,7 +8,7 @@ jest.mock('../flightApis');
 const mockedApis = apis as jest.Mocked<typeof apis>;
 mockedApis.getLocationsByTerm.mockResolvedValue(createMockedCities());
 
-test('searches city with autocomplete', async () => {
+test('searches a city with autocomplete', async () => {
   const fn = jest.fn();
   const { getByLabelText, getByText } = render(
     <LocationInput label="From" name="from" id="from" onChange={fn} />

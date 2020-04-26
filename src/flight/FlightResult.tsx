@@ -46,7 +46,7 @@ const FlightResult: React.FC<FlightResultProps> = ({ result }) => {
   if (result === null) {
     return (
       <Typography variant="h6" className={classes.noResult}>
-        <SadIcon /> No flight available
+        <SadIcon /> No flights available
       </Typography>
     );
   }
@@ -66,7 +66,9 @@ const FlightResult: React.FC<FlightResultProps> = ({ result }) => {
           {format(result.departure, 'EEEE, d MMMM yyyy')}
         </Typography>
         <Typography variant="button" display="block" gutterBottom></Typography>
-        <Typography variant="body1">Weather forecast for the next 5 days:</Typography>
+        <Typography variant="body2">
+          Weather forecast for the next 5 days in {result.toCity.name}:
+        </Typography>
         <List dense>
           {result.weather.map((forecast, i) => (
             <ListItem key={i}>

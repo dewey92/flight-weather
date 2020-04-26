@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDebounce } from 'react-use';
-import { TextField, InputAdornment } from '@material-ui/core';
+import { Box, TextField, InputAdornment } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import LocationIcon from '@material-ui/icons/LocationOn';
 import { City } from '../flightTypes';
@@ -12,12 +12,17 @@ interface LocationInputProps {
   name?: string;
   placeholder?: string;
   disabled?: boolean;
-  onChange: (loc: City | null) => void;
+  multiple?: boolean;
+  limitTags?: number;
+  onChange: (loc: City | City[] | null) => void;
 }
 
-const LocationInput: React.FC<LocationInputProps> = (props) => {
-  const { onChange, ...textFieldProps } = props;
-
+const LocationInput: React.FC<LocationInputProps> = ({
+  onChange,
+  multiple = false,
+  limitTags = 1,
+  ...textFieldProps
+}) => {
   const [value, setValue] = React.useState('');
   const [locations, setLocations] = React.useState<City[]>([]);
 
@@ -39,9 +44,12 @@ const LocationInput: React.FC<LocationInputProps> = (props) => {
       getOptionLabel={(option) => `${option.name}, ${option.country.name}`}
       getOptionSelected={(option, value) => option.name === value.name}
       autoComplete
-      includeInputInList
+      includeInputInList={!multiple}
+      multiple={multiple as any} // type definition of Autocomplete is not correct
+      filterSelectedOptions={multiple}
+      limitTags={limitTags}
       options={locations}
-      onChange={(_, value: City | null) => onChange(value)}
+      onChange={(_, value) => onChange(value)}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -50,9 +58,12 @@ const LocationInput: React.FC<LocationInputProps> = (props) => {
           InputProps={{
             ...params.InputProps,
             startAdornment: (
-              <InputAdornment position="start">
-                <LocationIcon color="primary" />
-              </InputAdornment>
+              <Box display="flex">
+                <InputAdornment position="start" style={{ height: 'auto' }}>
+                  <LocationIcon color="primary" />
+                </InputAdornment>
+                <div>{params.InputProps.startAdornment}</div>
+              </Box>
             ),
           }}
           value={value}
