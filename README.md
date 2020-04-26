@@ -2,6 +2,9 @@
 
 A simple app to search for the cheapest flight price with 5 day weather forecast
 
+DEMO: https://flight-weather.netlify.app/
+[![Netlify Status](https://api.netlify.com/api/v1/badges/0bfae7fd-e5cc-4987-aed4-cef87511f272/deploy-status)](https://app.netlify.com/sites/flight-weather/deploys)
+
 ## Available Scripts
 
 In the project directory, you can run:
