@@ -1,4 +1,6 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# ✈️ Flight Weather
+
+A simple app to search for the cheapest flight price with 5 day weather forecast
 
 ## Available Scripts
 
@@ -26,3 +28,18 @@ The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+## Folder Structure
+
+I decided to structure the application based on domains. Please note that currently this app has only one domain: `flight`.
+
+`shared` is a directory dedicated to anything not related to any domains.
+
+Learn more:
+- [Domain-Driven File Structuring -React/Redux](https://medium.com/@hassan.djirdeh/domain-driven-react-redux-a474ecf7d126)
+- [Domain directory structure for React apps: why it’s worth trying](https://tech.offgrid-electric.com/domain-directory-structure-for-react-apps-why-its-worth-trying-b3855ee77a1e)
+
+## APIS
+
+- For the flight and location API search, I'm using [Kiwi](https://docs.kiwi.com/)
+- For the weather itself, I'm using [Open Weather Map provided by Rapidapi](https://rapidapi.com/community/api/open-weather-map)
