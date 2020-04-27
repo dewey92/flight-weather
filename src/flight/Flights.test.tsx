@@ -12,14 +12,9 @@ mockedApis.getLocationsByTerm.mockResolvedValue(createMockedCities());
 mockedApis.searchCheapestFlight.mockResolvedValue(createMockedFlights(mockedDate));
 
 test('searches a flight upon form submission', async () => {
-  const {
-    queryByText,
-    getByLabelText,
-    getByTitle,
-    getByText,
-    getAllByText,
-    getByPlaceholderText,
-  } = render(<Flights />);
+  const { queryByText, getByLabelText, getByTitle, getByText, getByPlaceholderText } = render(
+    <Flights />
+  );
 
   // Fill "from"
   fireEvent.keyDown(getByLabelText('From'), { key: 'ArrowDown' });
@@ -33,7 +28,7 @@ test('searches a flight upon form submission', async () => {
   await waitFor(() => getByText('Amsterdam, Netherlands'));
   fireEvent.click(getByText('Amsterdam, Netherlands'));
 
-  // Fill "to" Budapest
+  // Add Budapest to "to"
   fireEvent.keyDown(getByPlaceholderText('Where to?'), { key: 'ArrowDown' });
   fireEvent.change(getByPlaceholderText('Where to?'), { target: { value: 'bud' } });
   await waitFor(() => getByText('Budapest, Hungary'));
@@ -49,7 +44,10 @@ test('searches a flight upon form submission', async () => {
 
   expect(getByTitle('Loading')).toBeInTheDocument();
 
-  await waitFor(() => getAllByText('Jakarta - Amsterdam'));
+  await waitFor(() => {
+    expect(queryByText('Jakarta - Amsterdam')).toBeInTheDocument();
+    expect(queryByText('Jakarta - Budapest')).toBeInTheDocument();
+  });
 
   expect(queryByText('€733')).toBeInTheDocument();
   expect(queryByText('€712')).toBeInTheDocument();
