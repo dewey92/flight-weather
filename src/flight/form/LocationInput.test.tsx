@@ -9,9 +9,9 @@ const mockedApis = apis as jest.Mocked<typeof apis>;
 mockedApis.getLocationsByTerm.mockResolvedValue(createMockedCities());
 
 test('searches a city with autocomplete', async () => {
-  const fn = jest.fn();
+  const mockedOnChange = jest.fn();
   const { getByLabelText, getByText } = render(
-    <LocationInput label="From" name="from" id="from" onChange={fn} />
+    <LocationInput label="From" name="from" id="from" onChange={mockedOnChange} />
   );
 
   fireEvent.keyDown(getByLabelText('From'), { key: 'ArrowDown' });
@@ -20,5 +20,5 @@ test('searches a city with autocomplete', async () => {
   fireEvent.click(getByText('Jakarta, Indonesia'));
 
   expect(getByLabelText('From')).toHaveValue('Jakarta, Indonesia');
-  expect(fn).toHaveBeenCalledWith(jakarta);
+  expect(mockedOnChange).toHaveBeenCalledWith(jakarta);
 });
