@@ -17,6 +17,9 @@ interface LocationInputProps {
   onChange: (loc: City | City[] | null) => void;
 }
 
+/**
+ * A component to search for a city name with autocomplete capability
+ */
 const LocationInput: React.FC<LocationInputProps> = ({
   onChange,
   multiple = false,

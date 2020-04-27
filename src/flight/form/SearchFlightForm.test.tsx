@@ -21,8 +21,8 @@ test('form not submitted when you have empty fields', async () => {
 });
 
 test('submits form when all fields are filled', async () => {
-  const firstJanuary = new Date(2020, 1, 1, 0, 0, 0); // 1 Jan 2020
-  advanceTo(firstJanuary);
+  const firstOfJanuary = new Date(2020, 1, 1, 0, 0, 0); // 1 Jan 2020
+  advanceTo(firstOfJanuary);
 
   const mockedOnSubmit = jest.fn();
   const { getByText, getByLabelText, getByPlaceholderText } = render(
@@ -47,7 +47,7 @@ test('submits form when all fields are filled', async () => {
   expect(mockedOnSubmit).toHaveBeenCalledWith({
     fromCity: jakarta,
     toCities: [amsterdam],
-    departure: firstJanuary,
+    departure: firstOfJanuary,
   });
   clear();
 });
